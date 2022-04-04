@@ -10,6 +10,11 @@
       {
         "ignoreConstructors": true
       }
+    ],
+    "no-empty-blocks": "off",
+    "quotes": [
+      "off",
+      "double"
     ]
   }
 }
