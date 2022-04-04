@@ -4,35 +4,34 @@ import { WalletContext } from './ethereum/WalletProvider';
 
 export default function App(): JSX.Element {
   const { wallet, connectWallet } = useContext(WalletContext);
-  const [text, setText] = useState('');
-  const [greet, setGreet] = useState('');
+  const [nftInfo, setNftInfo] = useState({ name: '', symbol: '' });
+  const [owner, setOwner] = useState('');
 
-  const setGreeting = async () => {
-    wallet?.contract.greeter
-      .setGreeting(text)
-      .then(setGreetingTx => setGreetingTx.wait())
-      .then(() => wallet?.contract.greeter.greet())
-      .then(_greet => setGreet(_greet));
-  };
+  // const setGreeting = async () => {
+  //   wallet?.contract.helloNft
+  //     .mint(wallet.address)
+  //     .then(mintTx => mintTx.wait())
+  //     .then(() => wallet?.contract.helloNft.ownerOf(0))
+  //     .then(_address => setOwner(_address));
+  // };
 
   useEffect(() => {
-    wallet?.contract.greeter.greet().then(_greet => setGreet(_greet));
+    Promise.all([
+      wallet?.contract.helloNft.name(),
+      wallet?.contract.helloNft.symbol(),
+    ]).then(([name, symbol]) => {
+      if (name && symbol) setNftInfo({ name, symbol });
+    });
   }, [wallet]);
 
   return (
     <>
       {wallet ? (
         <div>
-          <p>Address: {wallet.address}</p>
-          <p>Greeting: {greet}</p>
-          <div>
-            <input
-              type='text'
-              value={text}
-              onChange={e => setText(e.target.value)}
-            />
-            <button onClick={setGreeting}>setGreeting</button>
-          </div>
+          <h4>HelloNFT</h4>
+          <p>
+            name: {nftInfo.name}, symbol: {nftInfo.symbol}
+          </p>
         </div>
       ) : (
         <button onClick={connectWallet}>Connect Wallet</button>

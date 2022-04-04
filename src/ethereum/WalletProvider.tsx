@@ -14,8 +14,8 @@ import {
   Web3Provider,
 } from '@ethersproject/providers';
 
-import GreeterInfo from './abi/Greeter.json';
-import { Greeter } from './typechain-types';
+import { HelloNft } from '../../typechain-types';
+import HelloNftInfo from './abi/HelloNft.json';
 
 declare global {
   interface Window {
@@ -29,7 +29,7 @@ type Wallet =
       signer: JsonRpcSigner;
       address: string;
       contract: {
-        greeter: Greeter;
+        helloNft: HelloNft;
       };
     }
   | undefined;
@@ -39,7 +39,7 @@ export const WalletContext = createContext({
   connectWallet: () => {},
 });
 
-const contractAddress = '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9';
+const contractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
 
 export default function WalletProvider(props: { children: ReactNode }) {
   const [wallet, setWallet] = useState<Wallet>();
@@ -65,16 +65,16 @@ export default function WalletProvider(props: { children: ReactNode }) {
     } else {
       const provider = new Web3Provider(window.ethereum);
       const signer = provider.getSigner();
-      const greeter = new Contract(
+      const helloNft = new Contract(
         contractAddress,
-        GreeterInfo.abi,
+        HelloNftInfo.abi,
         signer
-      ) as Greeter;
+      ) as HelloNft;
       setWallet({
         provider,
         signer,
         address: addresses[0],
-        contract: { greeter },
+        contract: { helloNft },
       });
     }
   };
