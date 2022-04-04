@@ -9,14 +9,13 @@ import { HelloNft } from '../typechain-types';
 describe('HelloNft', () => {
   let helloNft: HelloNft;
   let owner: SignerWithAddress;
-  let account1: SignerWithAddress;
 
   before(async () => {
     // deploy NFT
     const HelloNft = await ethers.getContractFactory('HelloNft');
     helloNft = await HelloNft.deploy();
     await helloNft.deployed();
-    [owner, account1] = await ethers.getSigners();
+    [owner] = await ethers.getSigners();
   });
 
   it('Check NFT info', async () => {
