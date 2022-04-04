@@ -1,19 +1,35 @@
 import { expect } from 'chai';
+import { base64 } from 'ethers/lib/utils';
 import { ethers } from 'hardhat';
 
-describe('Greeter', function () {
-  it("Should return the new greeting once it's changed", async function () {
-    this.timeout(60_000); // set 60 second timeout
+import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 
-    // deploy test
-    const Greeter = await ethers.getContractFactory('Greeter');
-    const greeter = await Greeter.deploy('Hello, world!');
-    await greeter.deployed();
-    expect(await greeter.greet()).to.equal('Hello, world!');
+import { HelloNft } from '../typechain-types';
 
-    // setter test
-    const setGreetingTx = await greeter.setGreeting('Hola, mundo!');
-    await setGreetingTx.wait();
-    expect(await greeter.greet()).to.equal('Hola, mundo!');
+describe('HelloNft', () => {
+  let helloNft: HelloNft;
+  let owner: SignerWithAddress;
+  let account1: SignerWithAddress;
+
+  before(async () => {
+    // deploy NFT
+    const HelloNft = await ethers.getContractFactory('HelloNft');
+    helloNft = await HelloNft.deploy();
+    await helloNft.deployed();
+    [owner, account1] = await ethers.getSigners();
+  });
+
+  it('Check NFT info', async () => {
+    expect(await helloNft.name()).to.equal('HelloNft');
+    expect(await helloNft.symbol()).to.equal('HELLO');
+  });
+
+  it('Mint to owner', async () => {
+    await helloNft.mint(owner.address);
+    expect(await helloNft.ownerOf(0)).to.equal(owner.address);
+  });
+
+  it('get tokenURI', async () => {
+    console.log(await helloNft.tokenURI(0));
   });
 });
