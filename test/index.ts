@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import { base64 } from 'ethers/lib/utils';
 import { ethers } from 'hardhat';
 
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
